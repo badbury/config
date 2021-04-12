@@ -11,6 +11,8 @@ import { CommandLineFlagResolver } from "./Resolvers/CommandLineFlagResolver";
 import { Predicates, ValidateResolver } from "./Resolvers/ValidateResolver";
 import { ResolverChain } from "./Resolvers/ResolverChain";
 import { NoopResolver } from "./Resolvers/NoopResolver";
+import { ObjectResolver } from "./Resolvers/ObjectResolver";
+import { ConfigDefinitions } from "./Config";
 
 export class ConfigDefinition<C = never> {
     constructor(
@@ -42,7 +44,7 @@ export class ConfigDefinition<C = never> {
     }
 
     map<T>(mapper: (a: C) => T): ConfigDefinition<T> {
-        return this.use(new TransformResolver(mapper))
+        return this.use(new TransformResolver(mapper));
     }
 
     default<T>(value: T): ConfigDefinition<C|T> {
@@ -53,13 +55,9 @@ export class ConfigDefinition<C = never> {
         return this.use(new DefaultResolver(null));
     }
 
-    // object(): ConfigDefinition<C|null> {
-    //     return this.use(new ObjectDefinition(() => ({
-    //         foo: define().default(989),
-    //         bar: define().default('989'),
-    //         baz: define().envVar('FLOOPERS'),
-    //     })));
-    // }
+    object<T>(object: ConfigDefinitions<T>): ConfigDefinition<T> {
+        return this.use(new ObjectResolver(object));
+    }
 
     validate(predicates: Predicates<C>): ConfigDefinition<C>  {
         return this.use(new ValidateResolver(predicates));

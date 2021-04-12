@@ -17,6 +17,10 @@ config.init({
         .validate({
             'must be a week day': (date: Date) => date.getDay() !== 0 && date.getDay() !== 6
         }),
+    obj: config.define().object({
+        foo: config.define().default(1),
+        bar: config.define().default('1'),
+    })
 });
 
 // config.get('bdddaz'); // Would throw exception
@@ -25,5 +29,6 @@ console.log('foo', config.get('foo'));
 console.log('bar', config.get('bar'));
 console.log('baz', config.get('baz'));
 console.log('qux', config.get('qux'));
+console.log('obj', config.get('obj'));
 const appConfig = config.getAll()
 console.log(appConfig);

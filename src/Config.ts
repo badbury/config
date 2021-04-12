@@ -17,9 +17,10 @@ export class Config<T extends Partial<Record<string, any>>> {
     constructor(
         private definitions: ConfigDefinitions<T>,
         private sources: ConfigSources = new ConfigSources,
+        prefix: string = '',
     ) {
         for (const key in this.definitions) {
-            this.definitions[key].name = key;
+            this.definitions[key].name = `${prefix}${key}`;
         }
     }
 

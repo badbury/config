@@ -31,6 +31,7 @@ export const Flag = (longFlag?: string, shortFlag?: string) => decorate((d) => d
 export const Custom = (key: string) => decorate((d) => d.custom(key));
 export const Transform = (mapper: (a: any) => any) => decorate((d) => d.map(mapper));
 export const Validate = (predicates: Predicates<any>) => decorate((d) => d.validate(predicates));
+export const Nested = (object: ConfigDefinitions<any>) => decorate((d) => d.object(object));
 
 export function fromDecoratedConfig<T>(
     decoratedConfig: new () => T,

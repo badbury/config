@@ -17,7 +17,13 @@ export class AppConfigSchema {
         .map((a) => new Date(Number(a)))
         .validate({
             'must be a week day': (date: Date) => date.getDay() !== 0 && date.getDay() !== 6
-        })
+        });
+    obj = define().object(new NestedSchema);
+}
+
+export class NestedSchema {
+    foo = define().default(1);
+    bar = define().default('1');
 }
 
 export type AppConfig = DefinitionsResolved<AppConfigSchema>;
@@ -30,5 +36,6 @@ console.log('foo', config.get('foo'));
 console.log('bar', config.get('bar'));
 console.log('baz', config.get('baz'));
 console.log('qux', config.get('qux'));
+console.log('obj', config.get('obj'));
 const appConfig: AppConfig = config.getAll();
 console.log(appConfig);

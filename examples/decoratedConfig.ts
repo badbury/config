@@ -2,10 +2,12 @@ import {
     ConfigSources,
     Custom,
     Default,
+    define,
     EnvDefault,
     EnvVar,
     Flag,
     fromDecoratedConfig,
+    Nested,
     Transform,
     Validate,
 } from "../src";
@@ -42,9 +44,15 @@ class DecoratedConfig {
         'must be a week day': (date: Date) => date.getDay() !== 0 && date.getDay() !== 6
     })
     qux!: Date;
+
+    @Nested({
+        foo: define().default(1),
+        bar: define().default('1'),
+    })
+    obj!: { foo: number, bar: string };
 }
 
-const decoratedConfig = fromDecoratedConfig(DecoratedConfig, new ConfigSources({quxDate: '1499999999999'}));
+const decoratedConfig = fromDecoratedConfig(DecoratedConfig, new ConfigSources());
 
 // decoratedConfig.bdddaz // Would produce compile time error
 console.log('fooBar', decoratedConfig.fooBar);
@@ -52,4 +60,5 @@ console.log('foo', decoratedConfig.foo);
 console.log('bar', decoratedConfig.bar);
 console.log('baz', decoratedConfig.baz);
 console.log('qux', decoratedConfig.qux);
+console.log('obj', decoratedConfig.obj);
 console.log(decoratedConfig);
