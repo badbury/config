@@ -2,6 +2,7 @@ import { Config } from "../src/Config";
 import { define } from "../src/facade";
 
 const config = new Config({
+    fooBar: define().default('default').envVar().flag(),
     foo: define().default(true).envVar('THIS_VAR').map(Boolean),
     bar: define().default(1),
     baz: define().default('Bosh').envVar('TWO').validate({
@@ -20,8 +21,10 @@ const config = new Config({
 });
 
 // config.get('bdddaz'); // Would produce compile time error
+console.log('fooBar', config.get('fooBar'));
 console.log('foo', config.get('foo'));
 console.log('bar', config.get('bar'));
 console.log('baz', config.get('baz'));
+console.log('qux', config.get('qux'));
 const appConfig = config.getAll();
 console.log(appConfig);

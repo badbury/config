@@ -1,9 +1,9 @@
 import { ConfigSources } from "../ConfigSources";
 import { ResolvedValue, Resolver } from "../Resolver";
 
-export class CommandLineFlagResolver implements Resolver<string> {
+export class CommandLineFlagResolver<I> implements Resolver<I, I|string> {
     constructor(private longFlag?: string, private shortFlag?: string) {}
-    resolve<I>(config: ConfigSources, last: ResolvedValue<I>): ResolvedValue<I|string> {
+    resolve(config: ConfigSources, last: ResolvedValue<I>): ResolvedValue<I|string> {
         const args = config.getArgs();
         let index = 0;
         const longFlag = this.longFlag || this.format(last.name);

@@ -1,9 +1,9 @@
 import { ConfigSources } from "../ConfigSources";
 import { ResolvedValue, Resolver } from "../Resolver";
 
-export class TransformResolver<T> implements Resolver<T> {
-    constructor(private mapper: (value: any) => T) {}
-    resolve<I>(config: ConfigSources, last: ResolvedValue<I>): ResolvedValue<T> {
+export class TransformResolver<I, O> implements Resolver<I, O> {
+    constructor(private mapper: (value: I) => O) {}
+    resolve(config: ConfigSources, last: ResolvedValue<I>): ResolvedValue<O> {
         if (last.found !== false) {
             return { ...last, value: this.mapper(last.value) };
         }

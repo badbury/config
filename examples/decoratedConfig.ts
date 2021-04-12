@@ -47,8 +47,9 @@ class DecoratedConfig {
 const decoratedConfig = fromDecoratedConfig(DecoratedConfig, new ConfigSources({quxDate: '1499999999999'}));
 
 // decoratedConfig.bdddaz // Would produce compile time error
+console.log('fooBar', decoratedConfig.fooBar);
 console.log('foo', decoratedConfig.foo);
 console.log('bar', decoratedConfig.bar);
 console.log('baz', decoratedConfig.baz);
-console.log('qux', decoratedConfig.qux.getDay());
+console.log('qux', decoratedConfig.qux);
 console.log(decoratedConfig);

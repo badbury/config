@@ -1,6 +1,7 @@
 import * as config from "../src";
 
 config.init({
+    fooBar: config.define().default('default').envVar().flag(),
     foo: config.define().default(true).envVar('THIS_VAR').map(Boolean),
     bar: config.define().default(1),
     baz: config.define().default('Bosh').forEnv('test', 'Bash').envVar('TWO').validate({
@@ -19,8 +20,10 @@ config.init({
 });
 
 // config.get('bdddaz'); // Would throw exception
+console.log('fooBar', config.get('fooBar'));
 console.log('foo', config.get('foo'));
 console.log('bar', config.get('bar'));
 console.log('baz', config.get('baz'));
+console.log('qux', config.get('qux'));
 const appConfig = config.getAll()
 console.log(appConfig);

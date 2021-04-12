@@ -3,11 +3,11 @@ import { ResolvedValue, Resolver } from "../Resolver";
 
 export type Predicates<E> = Record<string, (a: E) => boolean>;
 
-export class ValidateResolver<E> implements Resolver<never, E> {
+export class ValidateResolver<I> implements Resolver<I, I> {
 
-    constructor(private predicates: Predicates<E>) {}
+    constructor(private predicates: Predicates<I>) {}
 
-    resolve(config: ConfigSources, last: ResolvedValue<E>): ResolvedValue<E> {
+    resolve(config: ConfigSources, last: ResolvedValue<I>): ResolvedValue<I> {
         if (!last.found) {
             return last;
         }
@@ -18,7 +18,7 @@ export class ValidateResolver<E> implements Resolver<never, E> {
         return { ...last, errors: [ ...last.errors, ...errors ] }
     }
 
-    validate(value: E): string[] {
+    validate(value: I): string[] {
         return Object.keys(this.predicates).filter((check) => !this.predicates[check](value))
     }
 }

@@ -1,9 +1,9 @@
 import { ConfigSources } from "../ConfigSources";
 import { ResolvedValue, Resolver } from "../Resolver";
 
-export class EnvironmentVariableResolver implements Resolver<string> {
+export class EnvironmentVariableResolver<I> implements Resolver<I, I|string> {
     constructor(private key?: string) {}
-    resolve<I>(config: ConfigSources, last: ResolvedValue<I>): ResolvedValue<I|string> {
+    resolve(config: ConfigSources, last: ResolvedValue<I>): ResolvedValue<I|string> {
         const environment = config.getEnvironment();
         const value = this.key ? environment[this.key] : environment[this.format(last.name)];
         if (value) {

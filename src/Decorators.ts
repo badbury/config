@@ -1,65 +1,36 @@
 import { ConfigDefinition } from "./ConfigDefinition";
 import { ConfigSources } from "./ConfigSources";
 import { Resolver } from './Resolver';
-import "reflect-metadata";
 import { Predicates } from "./Resolvers/ValidateResolver";
 import { Config, ConfigDefinitions } from "./Config";
+import { ResolverChain } from "./Resolvers/ResolverChain";
+import "reflect-metadata";
 
 class ConfigDefinitionForDecorators<C = never> extends ConfigDefinition<C> {
-    use<T>(resolver: Resolver<T>): ConfigDefinition<C|T> {
-        // Unshift instead of push because decorators are applied in reverse order
-        this.resolvers.unshift(resolver);
-        return this;
+    use(resolver: Resolver<any, any>): ConfigDefinition<any> {
+        return new ConfigDefinitionForDecorators(
+            this.name,
+            new ResolverChain(resolver, this.resolver as any)
+        );
     }
 }
 
-function getDefinition(target: any, property: string): ConfigDefinition {
-    let definitions: Record<string, ConfigDefinition> = Reflect.getMetadata('configDefinitions', target) || {};
-    definitions[property] = definitions[property] || new ConfigDefinitionForDecorators(property);
-    Reflect.defineMetadata('configDefinitions', definitions, target);
-    return definitions[property];
-}
-
-export function EnvVar(env?: string) {
+function decorate(update: (definition: ConfigDefinition<any>) => ConfigDefinition<any>): any {
     return function (target: any, property: string) {
-        getDefinition(target, property).envVar(env);
+        let definitions: Record<string, ConfigDefinition<any>> = Reflect.getMetadata('configDefinitions', target) || {};
+        definitions[property] = definitions[property] || new ConfigDefinitionForDecorators(property);
+        definitions[property] = update(definitions[property]);
+        Reflect.defineMetadata('configDefinitions', definitions, target);
     };
 }
 
-export function Default(value: any) {
-    return function (target: any, property: string) {
-        getDefinition(target, property).default(value);
-    };
-}
-
-export function EnvDefault(env: string, value: any) {
-    return function (target: any, property: string) {
-        getDefinition(target, property).forEnv(env, value);
-    };
-}
-
-export function Flag(longFlag?: string, shortFlag?: string) {
-    return function (target: any, property: string) {
-        getDefinition(target, property).flag(longFlag, shortFlag);
-    };
-}
-
-export function Custom(key: string) {
-    return function (target: any, property: string) {
-        getDefinition(target, property).custom(key);
-    };
-}
-
-export function Transform(mapper: (a: any) => any) {
-    return function (target: any, property: string) {
-        getDefinition(target, property).map(mapper);
-    };
-}
-export function Validate(predicates: Predicates<any>) {
-    return function (target: any, property: string) {
-        getDefinition(target, property).validate(predicates);
-    };
-}
+export const EnvVar = (env?: string) => decorate((d) => d.envVar(env));
+export const Default = (value: any) => decorate((d) => d.default(value));
+export const EnvDefault = (env: string, value: any) => decorate((d) => d.forEnv(env, value));
+export const Flag = (longFlag?: string, shortFlag?: string) => decorate((d) => d.flag(longFlag, shortFlag));
+export const Custom = (key: string) => decorate((d) => d.custom(key));
+export const Transform = (mapper: (a: any) => any) => decorate((d) => d.map(mapper));
+export const Validate = (predicates: Predicates<any>) => decorate((d) => d.validate(predicates));
 
 export function fromDecoratedConfig<T>(
     decoratedConfig: new () => T,

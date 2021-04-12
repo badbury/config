@@ -9,22 +9,27 @@ import { CouldNotResolveConfigValue } from "./Errors/CouldNotResolveConfigValue"
 import { ConfigSources } from "./ConfigSources";
 import { CommandLineFlagResolver } from "./Resolvers/CommandLineFlagResolver";
 import { Predicates, ValidateResolver } from "./Resolvers/ValidateResolver";
+import { ResolverChain } from "./Resolvers/ResolverChain";
+import { NoopResolver } from "./Resolvers/NoopResolver";
 
 export class ConfigDefinition<C = never> {
-    protected resolvers: Resolver[] = [];
+    constructor(
+        public name: string = '',
+        protected resolver: Resolver<never, C> = new NoopResolver<never>(),
+    ) {}
 
-    constructor(public name: string = '') {}
-
-    use<T>(resolver: Resolver<T>): ConfigDefinition<C|T> {
-        this.resolvers.push(resolver);
-        return this;
+    use<O>(resolver: Resolver<C, O>): ConfigDefinition<O> {
+        return new ConfigDefinition(
+            this.name,
+            new ResolverChain(this.resolver, resolver)
+        );
     }
 
     envVar(key?: string): ConfigDefinition<C|string> {
         return this.use(new EnvironmentVariableResolver(key));
     }
 
-    flag(longFlag?: string, shortFlag?: string) {
+    flag(longFlag?: string, shortFlag?: string): ConfigDefinition<C|string> {
         return this.use(new CommandLineFlagResolver(longFlag, shortFlag));
     }
 
@@ -32,12 +37,12 @@ export class ConfigDefinition<C = never> {
         return this.use(new EnvironmentDefaultResolver(envrionment, value));
     }
 
-    custom<T>(key: string) {
-        return this.use(new CustomValueResolver<T>(key));
+    custom<T>(key: string): ConfigDefinition<C|T> {
+        return this.use(new CustomValueResolver(key));
     }
 
     map<T>(mapper: (a: C) => T): ConfigDefinition<T> {
-        return this.use(new TransformResolver<T>(mapper)) as ConfigDefinition<T>;
+        return this.use(new TransformResolver(mapper))
     }
 
     default<T>(value: T): ConfigDefinition<C|T> {
@@ -61,11 +66,7 @@ export class ConfigDefinition<C = never> {
     }
 
     resolve(config: ConfigSources): ResolvedValue<C> {
-        let subject: ResolvedValue = { name: this.name, found: false, errors: [] }
-        for (const resolver of this.resolvers) {
-            subject = resolver.resolve(config, subject)
-        }
-        return subject;
+        return this.resolver.resolve(config, { name: this.name, found: false, errors: [] });
     }
 
     resolveAndExtract(config: ConfigSources): C {

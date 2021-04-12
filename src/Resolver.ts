@@ -15,6 +15,6 @@ export type NotFoundValue = {
     errors: string[];
 }
 
-export interface Resolver<T = any, E = any> {
-    resolve(config: ConfigSources, last: ResolvedValue<E>): ResolvedValue<E|T>
+export interface Resolver<I, O> {
+    resolve(config: ConfigSources, last: ResolvedValue<I>): ResolvedValue<O>
 }
