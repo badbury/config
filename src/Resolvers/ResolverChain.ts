@@ -1,4 +1,4 @@
-import { ConfigSources } from "../ConfigSources"
+import { ConfigContext } from "../ConfigContext"
 import { ResolvedValue, Resolver } from "../Resolver"
 
 export class ResolverChain<
@@ -11,8 +11,8 @@ export class ResolverChain<
         private second: B,
     ) {}
 
-    resolve(config: ConfigSources, last: ResolvedValue<I>): ResolvedValue<O> {
-        const next = this.first.resolve(config, last)
-        return this.second.resolve(config, next)
+    resolve(context: ConfigContext, last: ResolvedValue<I>): ResolvedValue<O> {
+        const next = this.first.resolve(context, last)
+        return this.second.resolve(context, next)
     }
 }

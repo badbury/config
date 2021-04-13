@@ -1,4 +1,4 @@
-import { ConfigSources } from "./ConfigSources";
+import { ConfigContext } from "./ConfigContext";
 
 export type ResolvedValue<T = any> = FoundValue<T> | NotFoundValue
 
@@ -6,15 +6,18 @@ export type FoundValue<T = any> = {
     name: string;
     found: true;
     value: T;
+    source: string;
+    options: string[];
     errors: string[];
 }
 
 export type NotFoundValue = {
     name: string;
     found: false;
+    options: string[];
     errors: string[];
 }
 
 export interface Resolver<I, O> {
-    resolve(config: ConfigSources, last: ResolvedValue<I>): ResolvedValue<O>
+    resolve(context: ConfigContext, last: ResolvedValue<I>): ResolvedValue<O>
 }

@@ -11,8 +11,7 @@ export class AppConfigSchema {
     qux = define()
         .default('0')
         .envVar('QUX_DATE')
-        .custom('quxDate')
-        .forEnv('testing', '999999999999')
+        .envDefault('testing', '999999999999')
         .flag('qux', 'q')
         .map((a) => new Date(Number(a)))
         .validate({

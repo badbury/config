@@ -1,26 +1,24 @@
-import { ConfigSources } from "../ConfigSources";
+import { ConfigContext } from "../ConfigContext";
 import { ResolvedValue, Resolver } from "../Resolver";
 
 export class CommandLineFlagResolver<I> implements Resolver<I, I|string> {
+
     constructor(private longFlag?: string, private shortFlag?: string) {}
-    resolve(config: ConfigSources, last: ResolvedValue<I>): ResolvedValue<I|string> {
-        const args = config.getArgs();
+
+    resolve(context: ConfigContext, last: ResolvedValue<I>): ResolvedValue<I|string> {
         let index = 0;
-        const longFlag = this.longFlag || this.format(last.name);
-        const prefixes = [`--${longFlag}`];
-        if (this.shortFlag) {
-            prefixes.push(`-${this.shortFlag}`)
-        }
-        while (index < args.length) {
-            // Check for --flag value and -f value
-            if (prefixes.some((prefix) => args[index] === prefix)) {
-                const value = args[index + 1];
-                return { ...last, found: true, value };
+        const longFlag = '--' + (this.longFlag || this.format(last.name));
+        last.options.push(`flag ${longFlag}`);
+        while (index < context.args.length) {
+            // Check for --flag value
+            if (context.args[index] === longFlag) {
+                const value = context.args[index + 1];
+                return { ...last, found: true, source: `${longFlag}=`, value };
             }
-            // Check for --flag=value and -f=value
-            if (prefixes.some((prefix) => args[index].startsWith(`${prefix}=`))) {
-                const value = args[index].split('=').slice(1).join('=');
-                return { ...last, found: true, value };
+            // Check for --flag=value
+            if (context.args[index].startsWith(`${longFlag}=`)) {
+                const value = context.args[index].split('=').slice(1).join('=');
+                return { ...last, found: true, source: `flag ${longFlag}=`, value };
             }
             index += 1;
         }
@@ -31,6 +29,7 @@ export class CommandLineFlagResolver<I> implements Resolver<I, I|string> {
         return name
             .replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`)
             .replace(/_/g, '-')
+            .replace(/\./g, '-')
             .toLowerCase();
     }
 }

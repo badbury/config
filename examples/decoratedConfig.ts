@@ -1,6 +1,4 @@
 import {
-    ConfigSources,
-    Custom,
     Default,
     define,
     EnvDefault,
@@ -36,7 +34,6 @@ class DecoratedConfig {
 
     @Default('0')
     @EnvVar('QUX_DATE')
-    @Custom('quxDate')
     @EnvDefault('testing', '999999999999')
     @Flag('qux', 'q')
     @Transform((timestamp) => new Date(Number(timestamp)))
@@ -52,7 +49,7 @@ class DecoratedConfig {
     obj!: { foo: number, bar: string };
 }
 
-const decoratedConfig = fromDecoratedConfig(DecoratedConfig, new ConfigSources());
+const decoratedConfig = fromDecoratedConfig(DecoratedConfig);
 
 // decoratedConfig.bdddaz // Would produce compile time error
 console.log('fooBar', decoratedConfig.fooBar);

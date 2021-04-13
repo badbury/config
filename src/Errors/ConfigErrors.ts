@@ -1,12 +1,28 @@
+import { inspect } from 'util';
 
 export class ConfigErrors extends Error {
-    public message = 'Config errors';
     public name = 'ConfigErrors';
-    constructor(
-        public errors: Error[],
-    ) {
+    public message = 'Invalid or missing config values';
+    public errors: Error[];
+
+    constructor(errors: Error[]) {
         super();
+        this.errors = errors;
+    }
+
+    [inspect.custom](): string {
+        return this.stringSummary();
+    }
+
+    objectSummary(): { error: string, reasons: string[] } {
+        return {
+            error: `${this.name}: ${this.message}`,
+            reasons: this.errors.map((error) => error.message),
+        }
+    }
+
+    stringSummary(): string {
         const errorMessages = this.errors.map((error) => ' - ' + error.message).join('\n')
-        this.message = `${this.message}: \n${errorMessages}`;
+        return `${this.name}: ${this.message} \n${errorMessages}`;
     }
 }

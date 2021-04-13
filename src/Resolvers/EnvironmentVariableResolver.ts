@@ -1,13 +1,15 @@
-import { ConfigSources } from "../ConfigSources";
+import { ConfigContext } from "../ConfigContext";
 import { ResolvedValue, Resolver } from "../Resolver";
 
 export class EnvironmentVariableResolver<I> implements Resolver<I, I|string> {
     constructor(private key?: string) {}
-    resolve(config: ConfigSources, last: ResolvedValue<I>): ResolvedValue<I|string> {
-        const environment = config.getEnvironment();
-        const value = this.key ? environment[this.key] : environment[this.format(last.name)];
+    resolve(context: ConfigContext, last: ResolvedValue<I>): ResolvedValue<I|string> {
+        const environment = context.environment;
+        const key = this.key ? this.key : this.format(last.name);
+        const value = environment[key];
+        last.options.push(`env var ${key}`)
         if (value) {
-            return { ...last, found: true, value }
+            return { ...last, found: true, value, source: `env var ${key}=` }
         }
         return last;
     }
@@ -15,6 +17,7 @@ export class EnvironmentVariableResolver<I> implements Resolver<I, I|string> {
     private format(name: string): string {
         return name
             .replace(/[A-Z]/g, letter => `_${letter}`)
+            .replace(/\./g, '_')
             .toUpperCase();
     }
 }

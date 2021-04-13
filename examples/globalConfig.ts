@@ -4,14 +4,13 @@ config.init({
     fooBar: config.define().default('default').envVar().flag(),
     foo: config.define().default(true).envVar('THIS_VAR').map(Boolean),
     bar: config.define().default(1),
-    baz: config.define().default('Bosh').forEnv('test', 'Bash').envVar('TWO').validate({
+    baz: config.define().default('Bosh').envDefault('test', 'Bash').envVar('TWO').validate({
         'must begin with "B"': (baz: string) => baz[0] === 'B'
     }),
     qux: config.define()
         .default('0')
         .envVar('QUX_DATE')
-        .custom('quxDate')
-        .forEnv('testing', '999999999999')
+        .envDefault('testing', '999999999999')
         .flag('qux', 'q')
         .map((a) => new Date(Number(a)))
         .validate({

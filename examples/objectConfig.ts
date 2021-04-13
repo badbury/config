@@ -5,14 +5,13 @@ const config = new Config({
     fooBar: define().default('default').envVar().flag(),
     foo: define().default(true).envVar('THIS_VAR').map(Boolean),
     bar: define().default(1),
-    baz: define().default('Bosh').envVar('TWO').validate({
-        'must begin with "B"': (baz) => baz[0] === 'B'
+    baz: define().default('Bosh').envDefault('test', 'Bash').envVar('TWO').validate({
+        'must begin with "B"': (baz: string) => baz[0] === 'B'
     }),
     qux: define()
         .default('0')
         .envVar('QUX_DATE')
-        .custom('quxDate')
-        .forEnv('testing', '999999999999')
+        .envDefault('testing', '999999999999')
         .flag('qux', 'q')
         .map((a) => new Date(Number(a)))
         .validate({

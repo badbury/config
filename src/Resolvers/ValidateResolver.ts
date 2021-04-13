@@ -1,4 +1,4 @@
-import { ConfigSources } from "../ConfigSources";
+import { ConfigContext } from "../ConfigContext";
 import { ResolvedValue, Resolver } from "../Resolver";
 
 export type Predicates<E> = Record<string, (a: E) => boolean>;
@@ -7,7 +7,7 @@ export class ValidateResolver<I> implements Resolver<I, I> {
 
     constructor(private predicates: Predicates<I>) {}
 
-    resolve(config: ConfigSources, last: ResolvedValue<I>): ResolvedValue<I> {
+    resolve(context: ConfigContext, last: ResolvedValue<I>): ResolvedValue<I> {
         if (!last.found) {
             return last;
         }

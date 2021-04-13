@@ -1,5 +1,5 @@
 import { ConfigDefinition } from "./ConfigDefinition";
-import { ConfigSources } from "./ConfigSources";
+import { ConfigContext } from "./ConfigContext";
 import { ConfigErrors } from "./Errors/ConfigErrors";
 
 export type ConfigDefinitions<T> = {
@@ -16,7 +16,7 @@ export class Config<T extends Partial<Record<string, any>>> {
 
     constructor(
         private definitions: ConfigDefinitions<T>,
-        private sources: ConfigSources = new ConfigSources,
+        private context: ConfigContext = new ConfigContext,
         prefix: string = '',
     ) {
         for (const key in this.definitions) {
@@ -25,7 +25,7 @@ export class Config<T extends Partial<Record<string, any>>> {
     }
 
     get<X extends keyof T>(key: X): T[X] {
-        return this.definitions[key].resolveAndExtract(this.sources);
+        return this.definitions[key].resolveAndExtract(this.context);
     }
 
     getAll(): T {
@@ -33,14 +33,22 @@ export class Config<T extends Partial<Record<string, any>>> {
         const errors = [];
         for (const key in this.definitions) {
             try {
-                result[key] = this.definitions[key].resolveAndExtract(this.sources);
+                result[key] = this.definitions[key].resolveAndExtract(this.context);
             } catch (error) {
-                errors.push(error);
+                if (error instanceof ConfigErrors) {
+                    errors.push(...error.errors)
+                } else {
+                    errors.push(error);
+                }
             }
         }
         if (errors.length > 0) {
             throw new ConfigErrors(errors);
         }
         return result;
+    }
+
+    environmentVariables<X extends keyof T>(key: X): T[X] {
+        return this.definitions[key].resolveAndExtract(this.context);
     }
 }
