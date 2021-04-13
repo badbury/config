@@ -34,6 +34,7 @@ const config = new Config({
 });
 
 try {
+    console.log(config.describe());
     const appConfig = config.getAll();
     console.log(appConfig);
 } catch (e) {

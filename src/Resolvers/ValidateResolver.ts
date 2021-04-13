@@ -7,6 +7,15 @@ export class ValidateResolver<I> implements Resolver<I, I> {
 
     constructor(private predicates: Predicates<I>) {}
 
+    describe(name: string) {
+        const rules = Object.keys(this.predicates) as string[]
+        let validate = rules.pop();
+        if (rules.length > 0) {
+            validate = `${rules.join(', ')} and ${validate}`;
+        }
+        return [validate ? { validate } : {}] as Record<string, string>[];
+    }
+
     resolve(context: ConfigContext, last: ResolvedValue<I>): ResolvedValue<I> {
         if (!last.found) {
             return last;

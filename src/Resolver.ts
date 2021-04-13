@@ -19,5 +19,6 @@ export type NotFoundValue = {
 }
 
 export interface Resolver<I, O> {
-    resolve(context: ConfigContext, last: ResolvedValue<I>): ResolvedValue<O>
+    describe(name: string): Record<string, string>[];
+    resolve(context: ConfigContext, last: ResolvedValue<I>): ResolvedValue<O>;
 }

@@ -58,6 +58,13 @@ export class ConfigDefinition<C = never> {
         return this.use(new ValidateResolver(predicates));
     }
 
+    describe(): Record<string, string>[] {
+        return [
+            {name: this.name},
+            ...this.resolver.describe(this.name)
+        ];
+    }
+
     resolve(context: ConfigContext): ResolvedValue<C> {
         return this.resolver.resolve(context, { name: this.name, found: false, errors: [], options: [] });
     }

@@ -5,9 +5,13 @@ export class CommandLineFlagResolver<I> implements Resolver<I, I|string> {
 
     constructor(private longFlag?: string, private shortFlag?: string) {}
 
+    describe(name: string) {
+        return [{ flag: this.getLongFlag(name) }];
+    }
+
     resolve(context: ConfigContext, last: ResolvedValue<I>): ResolvedValue<I|string> {
         let index = 0;
-        const longFlag = '--' + (this.longFlag || this.format(last.name));
+        const longFlag = this.getLongFlag(last.name);
         last.options.push(`flag ${longFlag}`);
         while (index < context.args.length) {
             // Check for --flag value
@@ -23,6 +27,10 @@ export class CommandLineFlagResolver<I> implements Resolver<I, I|string> {
             index += 1;
         }
         return last;
+    }
+
+    private getLongFlag(name: string): string {
+        return '--' + (this.longFlag || this.format(name));
     }
 
     private format(name: string): string {

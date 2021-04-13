@@ -2,7 +2,14 @@ import { ConfigContext } from "../ConfigContext";
 import { ResolvedValue, Resolver } from "../Resolver";
 
 export class EnvironmentVariableResolver<I> implements Resolver<I, I|string> {
+
     constructor(private key?: string) {}
+
+    describe(name: string) {
+        const key = this.key ? this.key : this.format(name);
+        return [{ envVar: key }];
+    }
+
     resolve(context: ConfigContext, last: ResolvedValue<I>): ResolvedValue<I|string> {
         const environment = context.environment;
         const key = this.key ? this.key : this.format(last.name);
