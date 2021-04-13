@@ -1,4 +1,4 @@
-import { Resolver, ResolvedValue } from "./Resolver";
+import { Resolver, ResolvedValue, Description } from "./Resolver";
 import { EnvironmentVariableResolver } from "./Resolvers/EnvironmentVariableResolver";
 import { DefaultResolver } from "./Resolvers/DefaultResolver";
 import { EnvironmentDefaultResolver } from "./Resolvers/EnvironmentDefaultResolver";
@@ -58,11 +58,8 @@ export class ConfigDefinition<C = never> {
         return this.use(new ValidateResolver(predicates));
     }
 
-    describe(): Record<string, string>[] {
-        return [
-            {name: this.name},
-            ...this.resolver.describe(this.name)
-        ];
+    describe(): Description {
+        return this.resolver.describe(this.name);
     }
 
     resolve(context: ConfigContext): ResolvedValue<C> {

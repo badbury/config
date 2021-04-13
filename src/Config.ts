@@ -1,7 +1,7 @@
 import { ConfigDefinition } from "./ConfigDefinition";
 import { ConfigContext } from "./ConfigContext";
 import { ConfigErrors } from "./Errors/ConfigErrors";
-import { ResolvedValue } from "./Resolver";
+import { Description, ResolvedValue } from "./Resolver";
 
 export type ConfigDefinitions<T> = {
     [key in keyof T]: ConfigDefinition<T[key]>
@@ -25,12 +25,16 @@ export class Config<T extends Partial<Record<string, any>>> {
         }
     }
 
-    describe(): Record<string, string>[] {
-        const meta = {} as Record<string, string>[];
+    describe(): Description {
+        const meta = {} as Record<keyof T, Record<string, string> & { name: string }>;
         for (const key in this.definitions) {
-            meta.push(...this.definitions[key].describe());
+            for (const metaItem of this.definitions[key].describe()) {
+                meta[metaItem.name as keyof T] = meta[metaItem.name]
+                    ? { ...meta[metaItem.name], ...metaItem }
+                    : metaItem;
+            }
         }
-        return meta;
+        return Object.values(meta);
     }
 
     get<X extends keyof T>(key: X): T[X] {

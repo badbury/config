@@ -6,7 +6,7 @@ export class CommandLineFlagResolver<I> implements Resolver<I, I|string> {
     constructor(private longFlag?: string, private shortFlag?: string) {}
 
     describe(name: string) {
-        return [{ flag: this.getLongFlag(name) }];
+        return [{ name, flag: this.getLongFlag(name) }];
     }
 
     resolve(context: ConfigContext, last: ResolvedValue<I>): ResolvedValue<I|string> {

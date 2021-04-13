@@ -38,8 +38,8 @@ try {
     const appConfig = config.getAll();
     console.log(appConfig);
 } catch (e) {
-    const error: ConfigErrors = e;
-    console.log(JSON.stringify(error));
-    console.log((error.objectSummary()));
-    console.error(error);
+    // const error: ConfigErrors = e;
+    // console.log(JSON.stringify(error));
+    // console.log((error.objectSummary()));
+    console.error(e);
 }

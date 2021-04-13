@@ -6,7 +6,7 @@ export class EnvironmentDefaultResolver<I, O> implements Resolver<I, I|O> {
     constructor(private environment: string, private value: O) {}
 
     describe(name: string) {
-        return [{ envDefault: '' }];
+        return [{ name, envDefault: `${this.environment}=${this.value}` }];
     }
 
     resolve(context: ConfigContext, last: ResolvedValue<I>): ResolvedValue<I|O> {

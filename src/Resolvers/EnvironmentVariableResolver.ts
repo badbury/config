@@ -7,7 +7,7 @@ export class EnvironmentVariableResolver<I> implements Resolver<I, I|string> {
 
     describe(name: string) {
         const key = this.key ? this.key : this.format(name);
-        return [{ envVar: key }];
+        return [{ name, envVar: key }];
     }
 
     resolve(context: ConfigContext, last: ResolvedValue<I>): ResolvedValue<I|string> {

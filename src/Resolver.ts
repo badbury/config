@@ -18,7 +18,9 @@ export type NotFoundValue = {
     errors: string[];
 }
 
+export type Description = (Record<string, string> & { name: string })[];
+
 export interface Resolver<I, O> {
-    describe(name: string): Record<string, string>[];
+    describe(name: string): Description;
     resolve(context: ConfigContext, last: ResolvedValue<I>): ResolvedValue<O>;
 }

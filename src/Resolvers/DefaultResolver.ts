@@ -6,7 +6,7 @@ export class DefaultResolver<I, O> implements Resolver<I, I|O> {
     constructor(private value: O) {}
 
     describe(name: string) {
-        return [{ default: JSON.stringify(this.value) }];
+        return [{ name, default: JSON.stringify(this.value) }];
     }
 
     resolve(context: ConfigContext, last: ResolvedValue<I>): ResolvedValue<I|O> {

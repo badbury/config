@@ -13,7 +13,7 @@ export class ValidateResolver<I> implements Resolver<I, I> {
         if (rules.length > 0) {
             validate = `${rules.join(', ')} and ${validate}`;
         }
-        return [validate ? { validate } : {}] as Record<string, string>[];
+        return validate ? [{ name, validate }] : [];
     }
 
     resolve(context: ConfigContext, last: ResolvedValue<I>): ResolvedValue<I> {
