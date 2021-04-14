@@ -1,6 +1,10 @@
+const t1 = new Date().getTime();
 import { Config } from "../src/Config";
 import { ConfigErrors } from "../src/Errors/ConfigErrors";
 import { define } from "../src/facade";
+
+console.log(new Date().getTime() - t1);
+const t2 = new Date().getTime();
 
 const config = new Config({
     fooBar: define().default('default').envVar().flag(),
@@ -33,13 +37,18 @@ const config = new Config({
         }),
 });
 
+console.log(new Date().getTime() - t2);
+const t3 = new Date().getTime();
+
 try {
     console.log(config.describe());
     const appConfig = config.getAll();
     console.log(appConfig);
 } catch (e) {
-    // const error: ConfigErrors = e;
-    // console.log(JSON.stringify(error));
-    // console.log((error.objectSummary()));
+    const error: ConfigErrors = e;
+    console.log(JSON.stringify(error));
+    console.log(error.objectSummary());
     console.error(e);
 }
+
+console.log(new Date().getTime() - t3);
