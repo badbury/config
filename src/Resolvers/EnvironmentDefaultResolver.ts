@@ -1,18 +1,22 @@
-import { ConfigContext } from "../ConfigContext";
-import { ResolvedValue, Resolver } from "../Resolver";
+import { ConfigContext } from '../ConfigContext';
+import { ResolvedValue, Resolver } from '../Resolver';
 
-export class EnvironmentDefaultResolver<I, O> implements Resolver<I, I|O> {
+export class EnvironmentDefaultResolver<I, O> implements Resolver<I, I | O> {
+  constructor(private environment: string, private value: O) {}
 
-    constructor(private environment: string, private value: O) {}
+  describe(name: string) {
+    return [{ name, envDefault: `${this.environment}=${this.value}` }];
+  }
 
-    describe(name: string) {
-        return [{ name, envDefault: `${this.environment}=${this.value}` }];
+  resolve(context: ConfigContext, last: ResolvedValue<I>): ResolvedValue<I | O> {
+    if (context.environment.NODE_ENV === this.environment) {
+      return {
+        ...last,
+        found: true,
+        value: this.value,
+        source: `${this.environment} environment default `,
+      };
     }
-
-    resolve(context: ConfigContext, last: ResolvedValue<I>): ResolvedValue<I|O> {
-        if (context.environment.NODE_ENV === this.environment) {
-            return { ...last, found: true, value: this.value, source: `${this.environment} environment default ` }
-        }
-        return last;
-    }
+    return last;
+  }
 }
