@@ -25,14 +25,27 @@ function decorate(update: (definition: ConfigDefinition<any>) => ConfigDefinitio
   };
 }
 
-export const EnvVar = (env?: string) => decorate((d) => d.envVar(env));
-export const Default = (value: any) => decorate((d) => d.default(value));
-export const EnvDefault = (env: string, value: any) => decorate((d) => d.envDefault(env, value));
-export const Flag = (longFlag?: string, shortFlag?: string) =>
+export function EnvVar(env?: string): void {
+  decorate((d) => d.envVar(env));
+}
+export function Default(value: any): void {
+  decorate((d) => d.default(value));
+}
+export function EnvDefault(env: string, value: any): void {
+  decorate((d) => d.envDefault(env, value));
+}
+export function Flag(longFlag?: string, shortFlag?: string): void {
   decorate((d) => d.flag(longFlag, shortFlag));
-export const Transform = (mapper: (a: any) => any) => decorate((d) => d.map(mapper));
-export const Validate = (predicates: Predicates<any>) => decorate((d) => d.validate(predicates));
-export const Nested = (object: ConfigDefinitions<any>) => decorate((d) => d.object(object));
+}
+export function Transform(mapper: (a: any) => any): void {
+  decorate((d) => d.map(mapper));
+}
+export function Validate(predicates: Predicates<any>): void {
+  decorate((d) => d.validate(predicates));
+}
+export function Nested(object: ConfigDefinitions<any>): void {
+  decorate((d) => d.object(object));
+}
 
 export function fromDecoratedConfig<T>(
   decoratedConfig: new () => T,
