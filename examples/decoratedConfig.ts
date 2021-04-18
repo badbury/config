@@ -1,6 +1,5 @@
 import {
   Default,
-  define,
   EnvDefault,
   EnvVar,
   Flag,
@@ -9,6 +8,18 @@ import {
   Transform,
   Validate,
 } from '../src';
+
+process.on('uncaughtException', (error) => {
+  console.log(error);
+  process.exit(1);
+});
+
+class ObjConfig {
+  @Default(1)
+  foo!: number;
+  @Default('0')
+  bar!: string;
+}
 
 class DecoratedConfig {
   @Default('default')
@@ -41,16 +52,13 @@ class DecoratedConfig {
   })
   qux!: Date;
 
-  @Nested({
-    foo: define().default(1),
-    bar: define().default('1'),
-  })
-  obj!: { foo: number; bar: string };
+  @Nested()
+  obj!: ObjConfig;
 }
 
 const decoratedConfig = fromDecoratedConfig(DecoratedConfig);
 
-// decoratedConfig.bdddaz // Would produce compile time error
+// decoratedConfig.bdddaz; // Would produce compile time error
 console.log('fooBar', decoratedConfig.fooBar);
 console.log('foo', decoratedConfig.foo);
 console.log('bar', decoratedConfig.bar);

@@ -47,8 +47,8 @@ export class ConfigDefinition<C = never> {
     return this.use(new DefaultResolver(null));
   }
 
-  object<T>(object: ConfigDefinitions<T>): ConfigDefinition<T> {
-    return this.use(new ObjectResolver(object));
+  object<T>(object: ConfigDefinitions<T>, type?: new () => T): ConfigDefinition<T> {
+    return this.use(new ObjectResolver(object, type));
   }
 
   validate(predicates: Predicates<C>): ConfigDefinition<C> {

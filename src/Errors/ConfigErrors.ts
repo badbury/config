@@ -14,9 +14,14 @@ export class ConfigErrors extends Error {
     return this.stringSummary();
   }
 
-  objectSummary(): { error: string; reasons: string[] } {
+  toJSON(): { type: string; error: string; reasons: string[] } {
+    return this.objectSummary();
+  }
+
+  objectSummary(): { type: string; error: string; reasons: string[] } {
     return {
-      error: `${this.name}: ${this.message}`,
+      type: this.name,
+      error: `${this.message}`,
       reasons: this.errors.map((error) => error.message),
     };
   }

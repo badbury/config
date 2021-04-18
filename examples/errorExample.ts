@@ -26,6 +26,8 @@ const config = new Config({
       tax: define().envVar().flag(),
       tox: define()
         .default(11.5)
+        .envVar()
+        .map(Number)
         .validate({
           'must be greater than one': (num) => num > 1,
           'must be less than seven': (num) => num < 7,
@@ -57,6 +59,7 @@ try {
   console.log(JSON.stringify(error));
   console.log(error.objectSummary());
   console.error(e);
+  console.log(error.stringSummary());
 }
 
 console.log(new Date().getTime() - t3);
