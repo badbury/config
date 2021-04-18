@@ -49,7 +49,8 @@ const t3 = new Date().getTime();
 
 try {
   console.log(config.describe());
-  const appConfig = config.getAll();
+  console.log(config.environmentVariables());
+  const appConfig = config.resolve();
   console.log(appConfig);
 } catch (e) {
   const error: ConfigErrors = e;

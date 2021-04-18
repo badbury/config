@@ -1,10 +1,10 @@
 import { ConfigContext } from '../ConfigContext';
-import { ResolvedValue, Resolver } from '../Resolver';
+import { Description, ResolvedValue, Resolver } from '../Resolver';
 
 export class DefaultResolver<I, O> implements Resolver<I, I | O> {
   constructor(private value: O) {}
 
-  describe(name: string) {
+  describe(name: string): Description {
     return [{ name, default: JSON.stringify(this.value) }];
   }
 

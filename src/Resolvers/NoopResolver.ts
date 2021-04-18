@@ -1,8 +1,8 @@
 import { ConfigContext } from '../ConfigContext';
-import { ResolvedValue, Resolver } from '../Resolver';
+import { Description, ResolvedValue, Resolver } from '../Resolver';
 
 export class NoopResolver<T> implements Resolver<T, T> {
-  describe(name: string) {
+  describe(): Description {
     return [];
   }
 

@@ -1,10 +1,10 @@
 import { ConfigContext } from '../ConfigContext';
-import { ResolvedValue, Resolver } from '../Resolver';
+import { Description, ResolvedValue, Resolver } from '../Resolver';
 
 export class EnvironmentDefaultResolver<I, O> implements Resolver<I, I | O> {
   constructor(private environment: string, private value: O) {}
 
-  describe(name: string) {
+  describe(name: string): Description {
     return [{ name, envDefault: `${this.environment}=${this.value}` }];
   }
 

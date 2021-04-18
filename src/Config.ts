@@ -1,7 +1,7 @@
 import { ConfigDefinition } from './ConfigDefinition';
 import { ConfigContext } from './ConfigContext';
 import { ConfigErrors } from './Errors/ConfigErrors';
-import { Description, ResolvedValue } from './Resolver';
+import { Description } from './Resolver';
 
 export type ConfigDefinitions<T> = {
   [key in keyof T]: ConfigDefinition<T[key]>;
@@ -36,16 +36,12 @@ export class Config<T extends Partial<Record<string, any>>> {
     return Object.values(meta);
   }
 
-  get<X extends keyof T>(key: X): T[X] {
-    return this.definitions[key].resolveAndExtract(this.context);
-  }
-
-  getAll(): T {
+  resolve(): T {
     const result: T = {} as T;
     const errors = [];
     for (const key in this.definitions) {
       try {
-        result[key] = this.get(key);
+        result[key] = this.definitions[key].resolve(this.context);
       } catch (error) {
         if (error instanceof ConfigErrors) {
           errors.push(...error.errors);
@@ -60,7 +56,9 @@ export class Config<T extends Partial<Record<string, any>>> {
     return result;
   }
 
-  environmentVariables<X extends keyof T>(key: X): T[X] {
-    return this.definitions[key].resolveAndExtract(this.context);
+  environmentVariables(): string[] {
+    return this.describe()
+      .filter((description) => !!description.envVar)
+      .map((description) => description.envVar);
   }
 }

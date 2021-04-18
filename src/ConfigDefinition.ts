@@ -1,4 +1,4 @@
-import { Resolver, ResolvedValue, Description } from './Resolver';
+import { Resolver, Description } from './Resolver';
 import { EnvironmentVariableResolver } from './Resolvers/EnvironmentVariableResolver';
 import { DefaultResolver } from './Resolvers/DefaultResolver';
 import { EnvironmentDefaultResolver } from './Resolvers/EnvironmentDefaultResolver';
@@ -59,17 +59,13 @@ export class ConfigDefinition<C = never> {
     return this.resolver.describe(this.name);
   }
 
-  resolve(context: ConfigContext): ResolvedValue<C> {
-    return this.resolver.resolve(context, {
+  resolve(context: ConfigContext): C {
+    const subject = this.resolver.resolve(context, {
       name: this.name,
       found: false,
       errors: [],
       options: [],
     });
-  }
-
-  resolveAndExtract(context: ConfigContext): C {
-    const subject = this.resolve(context);
     if (subject.found === false) {
       throw new MissingConfig(this.name, subject.options);
     }

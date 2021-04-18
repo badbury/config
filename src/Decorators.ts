@@ -15,7 +15,7 @@ class ConfigDefinitionForDecorators<C = never> extends ConfigDefinition<C> {
   }
 }
 
-function decorate(update: (definition: ConfigDefinition<any>) => ConfigDefinition<any>): any {
+function decorate(update: (definition: ConfigDefinition<any>) => ConfigDefinition<any>): Decorator {
   return function (target: any, property: string) {
     const definitions: Record<string, ConfigDefinition<any>> =
       Reflect.getMetadata('configDefinitions', target) || {};
@@ -25,26 +25,28 @@ function decorate(update: (definition: ConfigDefinition<any>) => ConfigDefinitio
   };
 }
 
-export function EnvVar(env?: string): void {
-  decorate((d) => d.envVar(env));
+type Decorator = (target: any, propertyKey: string) => void;
+
+export function EnvVar(env?: string): Decorator {
+  return decorate((d) => d.envVar(env));
 }
-export function Default(value: any): void {
-  decorate((d) => d.default(value));
+export function Default(value: any): Decorator {
+  return decorate((d) => d.default(value));
 }
-export function EnvDefault(env: string, value: any): void {
-  decorate((d) => d.envDefault(env, value));
+export function EnvDefault(env: string, value: any): Decorator {
+  return decorate((d) => d.envDefault(env, value));
 }
-export function Flag(longFlag?: string, shortFlag?: string): void {
-  decorate((d) => d.flag(longFlag, shortFlag));
+export function Flag(longFlag?: string, shortFlag?: string): Decorator {
+  return decorate((d) => d.flag(longFlag, shortFlag));
 }
-export function Transform(mapper: (a: any) => any): void {
-  decorate((d) => d.map(mapper));
+export function Transform(mapper: (a: any) => any): Decorator {
+  return decorate((d) => d.map(mapper));
 }
-export function Validate(predicates: Predicates<any>): void {
-  decorate((d) => d.validate(predicates));
+export function Validate(predicates: Predicates<any>): Decorator {
+  return decorate((d) => d.validate(predicates));
 }
-export function Nested(object: ConfigDefinitions<any>): void {
-  decorate((d) => d.object(object));
+export function Nested(object: ConfigDefinitions<any>): Decorator {
+  return decorate((d) => d.object(object));
 }
 
 export function fromDecoratedConfig<T>(
@@ -54,7 +56,7 @@ export function fromDecoratedConfig<T>(
   const target: T = new decoratedConfig();
   const definitions: ConfigDefinitions<any> = Reflect.getMetadata('configDefinitions', target);
   const config = new Config<T>(definitions, context);
-  const resolvedConfig = config.getAll();
+  const resolvedConfig = config.resolve();
   for (const property in resolvedConfig) {
     target[property] = resolvedConfig[property];
   }

@@ -23,7 +23,7 @@ export class AppConfigSchema {
   obj = define().object(new NestedSchema());
 }
 
-export class NestedSchema {
+class NestedSchema {
   foo = define().default(1);
   bar = define().default('1');
 }
@@ -33,11 +33,5 @@ export type AppConfig = DefinitionsResolved<AppConfigSchema>;
 const config = new Config(new AppConfigSchema());
 
 // config.get('bdddaz'); // Would produce compile time error
-console.log('fooBar', config.get('fooBar'));
-console.log('foo', config.get('foo'));
-console.log('bar', config.get('bar'));
-console.log('baz', config.get('baz'));
-console.log('qux', config.get('qux'));
-console.log('obj', config.get('obj'));
-const appConfig: AppConfig = config.getAll();
+const appConfig: AppConfig = config.resolve();
 console.log(appConfig);

@@ -1,12 +1,12 @@
 import { ConfigContext } from '../ConfigContext';
-import { ResolvedValue, Resolver } from '../Resolver';
+import { Description, ResolvedValue, Resolver } from '../Resolver';
 
 export type Predicates<E> = Record<string, (a: E) => boolean>;
 
 export class ValidateResolver<I> implements Resolver<I, I> {
   constructor(private predicates: Predicates<I>) {}
 
-  describe(name: string) {
+  describe(name: string): Description {
     const rules = Object.keys(this.predicates) as string[];
     let validate = rules.pop();
     if (rules.length > 0) {

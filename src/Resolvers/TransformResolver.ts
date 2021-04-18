@@ -1,10 +1,10 @@
 import { ConfigContext } from '../ConfigContext';
-import { ResolvedValue, Resolver } from '../Resolver';
+import { Description, ResolvedValue, Resolver } from '../Resolver';
 
 export class TransformResolver<I, O> implements Resolver<I, O> {
   constructor(private mapper: (value: I) => O) {}
 
-  describe(name: string) {
+  describe(): Description {
     return [];
   }
 

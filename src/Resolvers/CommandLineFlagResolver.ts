@@ -1,10 +1,10 @@
 import { ConfigContext } from '../ConfigContext';
-import { ResolvedValue, Resolver } from '../Resolver';
+import { Description, ResolvedValue, Resolver } from '../Resolver';
 
 export class CommandLineFlagResolver<I> implements Resolver<I, I | string> {
   constructor(private longFlag?: string, private shortFlag?: string) {}
 
-  describe(name: string) {
+  describe(name: string): Description {
     return [{ name, flag: this.getLongFlag(name) }];
   }
 
