@@ -1,13 +1,13 @@
 import { inspect } from 'util';
 
-export class InvalidConfig extends Error {
+export class InvalidConfig<T> extends Error {
   public name = 'InvalidConfig';
   public message = 'Invalid config';
   public configKey: string;
-  public configValue: any;
+  public configValue: T;
   public reasons: string[];
 
-  constructor(configKey: string, configValue: any, reasons: string[], source: string) {
+  constructor(configKey: string, configValue: T, reasons: string[], source: string) {
     super();
     const reason = reasons.join(' and ');
     const value = JSON.stringify(configValue);
