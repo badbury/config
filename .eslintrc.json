@@ -17,6 +17,7 @@
         "prettier"
     ],
     "rules": {
-      "prettier/prettier": "error"
+      "prettier/prettier": "error",
+      "@typescript-eslint/no-empty-function": "off"
     }
 }
