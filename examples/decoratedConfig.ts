@@ -17,6 +17,7 @@ process.on('uncaughtException', (error) => {
 class ObjConfig {
   @Default(1)
   foo!: number;
+
   @Default('0')
   bar!: string;
 }
