@@ -14,10 +14,16 @@ type SchemaInput<T> = Config<T> | (new () => ConfigDefinitions<T>) | ConfigDefin
 
 export class ConfigIocDefinition<T = unknown> implements Definition<ConfigIocDefinition> {
   definition = ConfigIocDefinition;
+
   constructor(
     public readonly subject: new () => T,
     public readonly schemaObject: Config<T> | undefined = undefined,
   ) {}
+
+  register(context: ConfigContext, sink: ResolverSink): void {
+    const schema = this.getSchemaObject();
+    sink.register(new FactoryResolver(this.subject, [], () => schema.resolve(context)));
+  }
 
   schema(schemaObject: SchemaInput<T>): ConfigIocDefinition {
     if (this.isSchemaClass(schemaObject)) {
@@ -27,11 +33,6 @@ export class ConfigIocDefinition<T = unknown> implements Definition<ConfigIocDef
       return new ConfigIocDefinition(this.subject, new Config(schemaObject));
     }
     return new ConfigIocDefinition(this.subject, schemaObject);
-  }
-
-  register(context: ConfigContext, sink: ResolverSink): void {
-    const schema = this.getSchemaObject();
-    sink.register(new FactoryResolver(this.subject, [], () => schema.resolve(context)));
   }
 
   private getSchemaObject(): Config<T> {
