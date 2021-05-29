@@ -1,7 +1,7 @@
 import { ConfigContext } from '../ConfigContext';
-import { Description, ResolvedValue, Resolver } from '../Resolver';
+import { Description, ResolvedValue, ConfigResolver } from '../ConfigResolver';
 
-export class TransformResolver<I, O> implements Resolver<I, O> {
+export class TransformResolver<I, O> implements ConfigResolver<I, O> {
   constructor(private mapper: (value: I) => O) {}
 
   describe(): Description {

@@ -20,7 +20,7 @@ export type NotFoundValue = {
 
 export type Description = (Record<string, string> & { name: string })[];
 
-export interface Resolver<I, O> {
+export interface ConfigResolver<I, O> {
   describe(name: string): Description;
   resolve(context: ConfigContext, last: ResolvedValue<I>): ResolvedValue<O>;
 }

@@ -1,4 +1,4 @@
-import { Resolver, Description } from './Resolver';
+import { ConfigResolver, Description } from './ConfigResolver';
 import { EnvironmentVariableResolver } from './Resolvers/EnvironmentVariableResolver';
 import { DefaultResolver } from './Resolvers/DefaultResolver';
 import { EnvironmentDefaultResolver } from './Resolvers/EnvironmentDefaultResolver';
@@ -16,10 +16,10 @@ import { ConfigDefinitions } from './Config';
 export class ConfigDefinition<C = never> {
   constructor(
     public name: string = '',
-    protected resolver: Resolver<never, C> = new NoopResolver<never>(),
+    protected resolver: ConfigResolver<never, C> = new NoopResolver<never>(),
   ) {}
 
-  use<O>(resolver: Resolver<C, O>): ConfigDefinition<O> {
+  use<O>(resolver: ConfigResolver<C, O>): ConfigDefinition<O> {
     return new ConfigDefinition(this.name, new ResolverChain(this.resolver, resolver));
   }
 

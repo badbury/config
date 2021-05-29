@@ -1,6 +1,6 @@
 import { ConfigDefinition } from './ConfigDefinition';
 import { ConfigContext } from './ConfigContext';
-import { Resolver } from './Resolver';
+import { ConfigResolver } from './ConfigResolver';
 import { Predicates } from './Resolvers/ValidateResolver';
 import { Config, ConfigDefinitions } from './Config';
 import { ResolverChain } from './Resolvers/ResolverChain';
@@ -11,7 +11,7 @@ const typeKey = 'design:type';
 const configKey = 'badbury:config';
 
 class ConfigDefinitionForDecorators<C = never> extends ConfigDefinition<C> {
-  use(resolver: Resolver<any, any>): ConfigDefinition<any> {
+  use(resolver: ConfigResolver<any, any>): ConfigDefinition<any> {
     return new ConfigDefinitionForDecorators(
       this.name,
       new ResolverChain(resolver, this.resolver as any),

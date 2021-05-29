@@ -1,8 +1,8 @@
 import { ConfigContext } from '../ConfigContext';
-import { Description, ResolvedValue, Resolver } from '../Resolver';
+import { Description, ResolvedValue, ConfigResolver } from '../ConfigResolver';
 
-export class ResolverChain<I, M, O, A extends Resolver<I, M>, B extends Resolver<M, O>>
-  implements Resolver<I, O> {
+export class ResolverChain<I, M, O, A extends ConfigResolver<I, M>, B extends ConfigResolver<M, O>>
+  implements ConfigResolver<I, O> {
   constructor(private first: A, private second: B) {}
 
   describe(name: string): Description {

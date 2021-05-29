@@ -1,8 +1,8 @@
 import { Config, ConfigDefinitions } from '../Config';
 import { ConfigContext } from '../ConfigContext';
-import { Description, ResolvedValue, Resolver } from '../Resolver';
+import { Description, ResolvedValue, ConfigResolver } from '../ConfigResolver';
 
-export class ObjectResolver<I, O> implements Resolver<I, O> {
+export class ObjectResolver<I, O> implements ConfigResolver<I, O> {
   constructor(private definitions: ConfigDefinitions<O>, private type?: new () => O) {}
 
   describe(name: string): Description {

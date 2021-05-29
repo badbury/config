@@ -1,7 +1,7 @@
 import { ConfigContext } from '../ConfigContext';
-import { Description, ResolvedValue, Resolver } from '../Resolver';
+import { Description, ResolvedValue, ConfigResolver } from '../ConfigResolver';
 
-export class DefaultResolver<I, O> implements Resolver<I, I | O> {
+export class DefaultResolver<I, O> implements ConfigResolver<I, I | O> {
   constructor(private value: O) {}
 
   describe(name: string): Description {

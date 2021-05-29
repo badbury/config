@@ -1,9 +1,9 @@
 import { ConfigContext } from '../ConfigContext';
-import { Description, ResolvedValue, Resolver } from '../Resolver';
+import { Description, ResolvedValue, ConfigResolver } from '../ConfigResolver';
 
 export type Predicates<E> = Record<string, (a: E) => boolean>;
 
-export class ValidateResolver<I> implements Resolver<I, I> {
+export class ValidateResolver<I> implements ConfigResolver<I, I> {
   constructor(private predicates: Predicates<I>) {}
 
   describe(name: string): Description {

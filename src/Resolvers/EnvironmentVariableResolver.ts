@@ -1,7 +1,7 @@
 import { ConfigContext } from '../ConfigContext';
-import { Description, ResolvedValue, Resolver } from '../Resolver';
+import { Description, ResolvedValue, ConfigResolver } from '../ConfigResolver';
 
-export class EnvironmentVariableResolver<I> implements Resolver<I, I | string> {
+export class EnvironmentVariableResolver<I> implements ConfigResolver<I, I | string> {
   constructor(private key?: string) {}
 
   describe(name: string): Description {

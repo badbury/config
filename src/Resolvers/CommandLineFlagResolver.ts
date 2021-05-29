@@ -1,7 +1,7 @@
 import { ConfigContext } from '../ConfigContext';
-import { Description, ResolvedValue, Resolver } from '../Resolver';
+import { Description, ResolvedValue, ConfigResolver } from '../ConfigResolver';
 
-export class CommandLineFlagResolver<I> implements Resolver<I, I | string> {
+export class CommandLineFlagResolver<I> implements ConfigResolver<I, I | string> {
   constructor(private longFlag?: string, private shortFlag?: string) {}
 
   describe(name: string): Description {

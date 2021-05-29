@@ -1,7 +1,7 @@
 import { ConfigDefinition } from './ConfigDefinition';
 import { ConfigContext } from './ConfigContext';
 import { ConfigErrors } from './Errors/ConfigErrors';
-import { Description } from './Resolver';
+import { Description } from './ConfigResolver';
 
 export type ConfigDefinitions<T> = {
   [key in keyof T]: ConfigDefinition<T[key]>;
