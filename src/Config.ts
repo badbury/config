@@ -14,11 +14,7 @@ export type DefinitionsResolved<T> = {
 type DefinitionResolved<T> = T extends ConfigDefinition<infer X> ? X : never;
 
 export class Config<T extends Partial<Record<string, any>>> {
-  constructor(
-    private definitions: ConfigDefinitions<T>,
-    private context: ConfigContext = new ConfigContext(),
-    prefix = '',
-  ) {
+  constructor(private definitions: ConfigDefinitions<T>, prefix = '') {
     for (const key in this.definitions) {
       this.definitions[key].name = `${prefix}${key}`;
     }
@@ -36,12 +32,12 @@ export class Config<T extends Partial<Record<string, any>>> {
     return Object.values(meta);
   }
 
-  resolve(): T {
+  resolve(context: ConfigContext = new ConfigContext()): T {
     const result: T = {} as T;
     const errors = [];
     for (const key in this.definitions) {
       try {
-        result[key] = this.definitions[key].resolve(this.context);
+        result[key] = this.definitions[key].resolve(context);
       } catch (error) {
         if (error instanceof ConfigErrors) {
           errors.push(...error.errors);

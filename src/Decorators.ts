@@ -66,8 +66,8 @@ export function fromDecoratedConfig<T>(
 ): T {
   const target: T = new decoratedConfig();
   const definitions: ConfigDefinitions<T> = Reflect.getMetadata(configKey, target);
-  const config = new Config<T>(definitions, context);
-  const resolvedConfig = config.resolve();
+  const config = new Config<T>(definitions);
+  const resolvedConfig = config.resolve(context);
   for (const property in resolvedConfig) {
     target[property] = resolvedConfig[property];
   }

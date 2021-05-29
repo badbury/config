@@ -15,6 +15,7 @@
   "author": "Simon Holloway <simon@syhol.io>",
   "license": "MIT",
   "devDependencies": {
+    "@badbury/ioc": "^1.0.0",
     "@types/jest": "^26.0.10",
     "@types/node": "^14.6.2",
     "@typescript-eslint/eslint-plugin": "^4.22.0",

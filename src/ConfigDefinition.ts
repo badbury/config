@@ -23,6 +23,10 @@ export class ConfigDefinition<C = never> {
     return new ConfigDefinition(this.name, new ResolverChain(this.resolver, resolver));
   }
 
+  withName(name: string): ConfigDefinition<C> {
+    return new ConfigDefinition(name, this.resolver);
+  }
+
   envVar(key?: string): ConfigDefinition<C | string> {
     return this.use(new EnvironmentVariableResolver(key));
   }
@@ -59,7 +63,7 @@ export class ConfigDefinition<C = never> {
     return this.resolver.describe(this.name);
   }
 
-  resolve(context: ConfigContext): C {
+  resolve(context: ConfigContext = new ConfigContext()): C {
     const subject = this.resolver.resolve(context, {
       name: this.name,
       found: false,
