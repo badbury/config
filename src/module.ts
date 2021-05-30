@@ -1,11 +1,4 @@
-import {
-  bind,
-  Definition,
-  ResolverSink,
-  on,
-  RegisterDefinitions,
-  FactoryResolver,
-} from '@badbury/ioc';
+import { bind, Definition, ResolverSink, on, RegisterDefinitions } from '@badbury/ioc';
 import { Config, ConfigDefinitions } from './Config';
 import { ConfigContext } from './ConfigContext';
 import { define } from './facade';
@@ -22,7 +15,7 @@ export class ConfigIocDefinition<T = unknown> implements Definition<ConfigIocDef
 
   register(context: ConfigContext, sink: ResolverSink): void {
     const schema = this.getSchemaObject();
-    sink.register(new FactoryResolver(this.subject, [], () => schema.resolve(context)));
+    sink.register(bind(this.subject).factory(() => schema.resolve(context)));
   }
 
   schema(schemaObject: SchemaInput<T>): ConfigIocDefinition {
