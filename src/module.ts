@@ -33,15 +33,12 @@ export class ConfigIocDefinition<T = unknown> implements Definition<ConfigIocDef
       return this.schemaObject;
     }
     const subject = new this.subject();
-    const definitions = {} as ConfigDefinitions<T>;
     const field = define().envVar();
-    for (const key of Object.keys(subject)) {
-      let definition = field.withName(key);
-      if (typeof subject[key as keyof T] !== 'undefined') {
-        definition = definition.default(subject[key as keyof T]) as any;
-      }
-      definitions[key as keyof T] = definition as any;
-    }
+    const definitions = Object.keys(subject).reduce((def: ConfigDefinitions<T>, key: string) => {
+      const hasDefault = typeof subject[key as keyof T] !== 'undefined';
+      const definition = hasDefault ? field.default(subject[key as keyof T]) : field.withName(key);
+      return { [key as keyof T]: definition, ...def };
+    }, {} as ConfigDefinitions<T>);
     return new Config(definitions);
   }
 
