@@ -47,7 +47,7 @@ export class Config<T extends Partial<Record<string, any>>> {
       }
     }
     if (errors.length > 0) {
-      throw new ConfigErrors(errors);
+      throw new ConfigErrors(errors as Error[]); // @TODO im lying
     }
     return result;
   }
